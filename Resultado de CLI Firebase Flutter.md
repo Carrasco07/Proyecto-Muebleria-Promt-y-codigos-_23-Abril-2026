@@ -1,216 +1,95 @@
-1. Configuración de Entorno y Carpetas
-Primero, organizamos el espacio de trabajo en tu sistema de archivos:
+Para configurar Firebase CLI y Node.js en Windows, necesitamos asegurar que el entorno sea estable y que las variables de entorno estén correctamente direccionadas. Aquí tienes la hoja de ruta técnica para lograrlo.
 
-Ruta principal: xfluttercarrasco0533/
+---
 
-Proyecto Flutter: crudmuebleria/
+## 1. Software Necesario: Node.js y npm
 
-Bash
-# Comandos para terminal
-mkdir xfluttercarrasco0533
-cd xfluttercarrasco0533
-flutter create crudmuebleria
-cd crudmuebleria
-2. Base de Datos Firestore (Consola Firebase)
-Ve a Firebase Console.
+Para ejecutar Firebase CLI (`firebase-tools`), necesitas **Node.js**, que incluye automáticamente **npm** (Node Package Manager).
 
-Crea un proyecto llamado "Muebleria".
+### Verificación de Instalación
+Antes de instalar nada, verifica si ya existen en tu sistema:
+1. Abre la terminal (**PowerShell** o **CMD**).
+2. Ejecuta los siguientes comandos:
+   * `node -v`
+   * `npm -v`
 
-En el menú lateral, selecciona Firestore Database.
+Si recibes un número de versión (ej. `v20.11.0`), ya está instalado. Si recibes un error de "comando no reconocido", procede con la instalación.
 
-Haz clic en Crear base de datos (modo prueba para desarrollo).
+### Instalación Paso a Paso en Windows
+1. **Descarga:** Ve a la página oficial de [Node.js](https://nodejs.org/) y elige la versión **LTS** (Long Term Support). Es la más estable para desarrollo.
+2. **Ejecución:** Abre el instalador `.msi`.
+3. **Configuración Global:** Durante el asistente, asegúrate de que la opción **"Add to PATH"** esté seleccionada (viene marcada por defecto). Esto permite que el comando `npm` funcione en cualquier carpeta.
+4. **Herramientas Adicionales:** El instalador te preguntará si quieres instalar "Tools for Native Modules". **Marca la casilla**. Esto instalará Chocolatey y Python, necesarios para que algunas librerías de Node funcionen correctamente en Windows.
 
-Crea una Colección llamada Muebles.
+---
 
-Agrega un documento inicial con los campos:
+## 2. Instalación de Firebase CLI
 
-nombre: (String)
+Una vez que `npm` esté listo, instalamos las herramientas de Firebase de forma **global** (el parámetro `-g`).
 
-precio: (Number)
+### Comando de Instalación
+Ejecuta este comando en tu terminal como **administrador**:
+```bash
+npm install -g firebase-tools
+```
 
-stock: (Number)
+---
 
-3. Integración de Librerías y Pubspec.yaml
-Para este proyecto, necesitamos las herramientas oficiales de Firebase. El archivo pubspec.yaml debe quedar así:
+## 3. Comandos de Acceso y Gestión
 
-YAML
-dependencies:
-  flutter:
-    sdk: flutter
-  # Core de Firebase
-  firebase_core: ^2.24.2
-  # Firestore para el CRUD
-  cloud_firestore: ^4.14.0
-  # Antigravity (o manejo de estados similar)
-  provider: ^6.1.1 
-Instalación: Ejecuta flutter pub get en la terminal.
+Con la herramienta instalada, el siguiente paso es vincular tu terminal con tu infraestructura en la nube.
 
-4. Estructura de Proyecto (Agentes y Roles)
-Aplicando una metodología de "Agentes y Roles", dividiremos el código en responsabilidades claras:
+### Cómo acceder a Firebase con Google
+Para iniciar sesión y dar permisos a la CLI:
+1. En la terminal, escribe:
+   ```bash
+   firebase login
+   ```
+2. Se abrirá automáticamente una ventana en tu navegador.
+3. Selecciona tu cuenta de Google donde creaste el proyecto de la mueblería.
+4. Haz clic en **Permitir**. 
+5. Regresa a la terminal; verás un mensaje de éxito: `Success! Logged in as usuario@gmail.com`.
 
-Data Agent (Service): Se encarga de hablar con Firebase.
+---
 
-Logic Agent (Provider): Gestiona el estado y flujo de datos.
+## 4. Configuración de Firebase para Flutter
 
-UI Agent (View): Muestra los widgets en tonos azules y grises.
+A diferencia de otros frameworks, Flutter utiliza una herramienta específica llamada **FlutterFire CLI** para automatizar la conexión (creación de archivos `google-services.json`, etc.).
 
-1
-Inicializar Firebase
-Archivo main.dart
-Configura el punto de entrada para que el motor de Flutter espere a Firebase.
+### Flujo de Trabajo (Workflow)
+Para integrar tu proyecto `crudmuebleria` con la consola:
 
-2
-Crear el Modelo
-Archivo mueble_model.dart
-Define la estructura de los datos (Nombre, Precio, Stock).
+<Steps>
+{/* Reason: La secuencia es obligatoria. No puedes configurar FlutterFire sin haber activado primero los comandos de activación global en Dart. */}
+  <Step title="Instalar FlutterFire CLI" subtitle="Desde la terminal">
+    Ejecuta: `dart pub global activate flutterfire_cli`. Esto descarga la herramienta específica para Flutter.
+  </Step>
+  <Step title="Configurar el Proyecto" subtitle="Dentro de la carpeta del proyecto">
+    Navega a `xfluttercarrasco0533/crudmuebleria` y ejecuta: `flutterfire configure`.
+  </Step>
+  <Step title="Vincular con la Consola" subtitle="Selección interactiva">
+    La terminal te mostrará una lista de tus proyectos de Firebase. Selecciona el proyecto de la mueblería que creaste en la consola.
+  </Step>
+  <Step title="Generar Archivo de Configuración" subtitle="firebase_options.dart">
+    La herramienta creará automáticamente un archivo en tu carpeta `lib` llamado `firebase_options.dart`. Este archivo contiene las credenciales necesarias para Android e iOS.
+  </Step>
+</Steps>
 
-3
-Implementar el Servicio CRUD
-Archivo firebase_service.dart
-Escribe las funciones para Create, Read, Update y Delete.
+---
 
-4
-Diseñar la Interfaz
-Archivo home_page.dart
-Crea los widgets con el esquema de colores solicitado.
+### Comandos Útiles de `firebase-tools`
 
+| Comando | Función |
+| :--- | :--- |
+| `firebase projects:list` | Muestra todos los proyectos activos en tu cuenta de Firebase. |
+| `firebase logout` | Cierra la sesión de la cuenta actual en la computadora. |
+| `firebase help` | Muestra la lista completa de comandos disponibles. |
 
-5. Código Funcional (Dart)
-A. El Modelo de Datos
-lib/models/mueble.dart
+> **Nota para estudiantes:** Si al ejecutar `firebase` o `flutterfire` recibes un error de "script no permitido", ejecuta en PowerShell: `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser`. Esto permite que Windows ejecute los scripts de estas herramientas.
 
-Dart
-class Mueble {
-  String id;
-  String nombre;
-  double precio;
-  int stock;
+---
 
-  Mueble({required this.id, required this.nombre, required this.precio, required this.stock});
-
-  // Convertir de Firestore a Objeto
-  factory Mueble.fromFirestore(Map<String, dynamic> data, String id) {
-    return Mueble(
-      id: id,
-      nombre: data['nombre'] ?? '',
-      precio: (data['precio'] ?? 0).toDouble(),
-      stock: data['stock'] ?? 0,
-    );
-  }
-}
-B. Servicio CRUD (Skill: Data Management)
-lib/services/firebase_service.dart
-
-Dart
-import 'cloud_firestore/cloud_firestore.dart';
-
-FirebaseFirestore db = FirebaseFirestore.instance;
-
-// CREATE
-Future<void> addMueble(String nombre, double precio, int stock) async {
-  await db.collection('Muebles').add({
-    'nombre': nombre,
-    'precio': precio,
-    'stock': stock,
-  });
-}
-
-// READ (Stream para tiempo real)
-Stream<List<Mueble>> getMuebles() {
-  return db.collection('Muebles').snapshots().map((snapshot) =>
-      snapshot.docs.map((doc) => Mueble.fromFirestore(doc.data(), doc.id)).toList());
-}
-
-// UPDATE
-Future<void> updateMueble(String id, String nombre, double precio, int stock) async {
-  await db.collection('Muebles').doc(id).update({
-    'nombre': nombre,
-    'precio': precio,
-    'stock': stock,
-  });
-}
-
-// DELETE
-Future<void> deleteMueble(String id) async {
-  await db.collection('Muebles').doc(id).delete();
-}
-C. Interfaz de Usuario (Estética Azul y Gris)
-lib/screens/home_page.dart
-
-Dart
-import 'package:flutter/material.dart';
-import '../services/firebase_service.dart';
-
-class MuebleriaHome extends StatelessWidget {
-  final Color darkBlue = const Color(0xFF1A237E);
-  final Color lightGrey = const Color(0xFFF5F5F5);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: lightGrey,
-      appBar: AppBar(
-        title: Text('Mueblería CRUD', style: TextStyle(color: Colors.white)),
-        backgroundColor: darkBlue,
-      ),
-      body: StreamBuilder(
-        stream: getMuebles(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
-          return ListView.builder(
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              var mueble = snapshot.data![index];
-              return Card(
-                color: Colors.white,
-                margin: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                child: ListTile(
-                  title: Text(mueble.nombre, style: TextStyle(fontWeight: FontWeight.bold, color: darkBlue)),
-                  subtitle: Text('Precio: \$${mueble.precio} | Stock: ${mueble.stock}'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(icon: Icon(Icons.edit, color: Colors.blueGrey), onPressed: () => _showForm(context, mueble)),
-                      IconButton(icon: Icon(Icons.delete, color: Colors.redAccent), onPressed: () => deleteMueble(mueble.id)),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: darkBlue,
-        child: Icon(Icons.add, color: Colors.white),
-        onPressed: () => _showForm(context, null),
-      ),
-    );
-  }
-
-  // Formulario para Crear/Actualizar (Skill: Modal Flow)
-  void _showForm(BuildContext context, dynamic mueble) {
-    // Aquí implementarías un AlertDialog con TextFields para nombre, precio y stock
-    // Llamando a addMueble o updateMueble según corresponda.
-  }
-}
-6. Metodología Paso a Paso para Estudiantes
-Para una práctica guiada basada en Antigravity, los estudiantes deben ver el desarrollo como un sistema de engranajes:
-
-Rol de Arquitecto: Diseña la carpeta lib/ con subcarpetas models, services, screens.
-
-Agente de Datos: Configura Firebase y crea el archivo de servicios. Su única "skill" es leer/escribir en la nube.
-
-Flujo de Trabajo: * Primero se define qué guardamos (Model).
-
-Segundo se define cómo lo guardamos (Service).
-
-Tercero se define dónde se ve (UI).
-
-Tip de Estilo: El uso de StreamBuilder es vital para que la app se actualice sola cuando cambies algo en la consola de Firebase, permitiendo ver el flujo de datos en tiempo real.
-
-¿Deseas profundizar en alguna parte técnica?
-
-Ver código completo del formulario modal
-
-Explicar arquitectura Antigravity
+<Elicitations message="¿Qué paso sigue en tu práctica?">
+  <Elicitation label="Configurar Firebase en el código de Flutter" query="Muéstrame cómo inicializar Firebase en el main.dart usando el archivo firebase_options.dart generado por FlutterFire." />
+  <Elicitation label="Solucionar errores comunes de Firebase CLI" query="Cuáles son los errores más comunes al instalar Firebase CLI en Windows y cómo solucionarlos." />
+</Elicitations>
